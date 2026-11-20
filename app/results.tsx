@@ -13,7 +13,7 @@ function Chart({question, pie}:{question:Distribution;pie:boolean}) {
     const position=start+100*o.count/(total || 1);
     return color(i)+' '+start+'% '+position+'%';
   });
-  return <div className="chart"><h4>{question.label}</h4>{question.historical && <small>Frühere Fragefassung · </small>}<small>{total} {total===1 ? "Antwort":"Antworten"}</small>
+  return <div className="chart"><h4>{question.label}</h4>{question.historical && <small style={{ color: "#a32128" }}>Frühere Fragefassung · </small>}<small>{total} {total===1 ? "Antwort":"Antworten"}</small>
     {total>0 && (pie ? <div aria-hidden className="pie" style={{background:'conic-gradient('+colors.join(',')+')'}}/> :
       <div className="columns" aria-hidden>{question.options.map((o,i)=><div key={o.label} className="bar-column">
         <span style={{height:(100*o.count/total)+'%',background:color(i)}}/></div>)}</div>)}
@@ -35,6 +35,14 @@ export default function Results({groups,completed,total}:{groups:Group[];complet
     </div>}
     </div>
     {!groups.length && <p>Noch keine Auswahlantworten vorhanden.</p>}
-    {groups.map(g=><details className="result-disclosure" key={g.title}><summary>{g.title}</summary>
-      {g.questions.map((q,i)=><Chart key={i} question={q} pie={pie}/>)}</details>)}</>;
+    {groups.map(g=>{
+      const current=g.questions.filter(q=>!q.historical);
+      const earlier=g.questions.filter(q=>q.historical);
+      return <details className="result-disclosure" key={g.title}><summary>{g.title}</summary>
+        {current.map((q,i)=><Chart key={i} question={q} pie={pie}/>)}
+        {earlier.length>0 && <details className="result-disclosure"><summary>Frühere Fragefassungen ({earlier.length})</summary>
+          {earlier.map((q,i)=><Chart key={i} question={q} pie={pie}/>)}
+        </details>}
+      </details>;
+    })}</>;
 }

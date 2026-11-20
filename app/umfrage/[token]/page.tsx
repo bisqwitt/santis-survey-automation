@@ -3,6 +3,7 @@ import { submit } from '../../actions';
 import { textLimit } from '../../questions';
 import { getCatalog } from '../../catalog';
 import { db } from '../../db';
+import SurveySteps from './survey-steps';
 
 export default async function Survey({params,searchParams}:PageProps<'/umfrage/[token]'>) {
   const {token}=await params;
@@ -13,7 +14,8 @@ export default async function Survey({params,searchParams}:PageProps<'/umfrage/[
   return <section>
     <h1>Feedback zu den Projektwochen</h1>
     <p>Hallo {String(person.first)}, bitte beantworte alle Fragen. Wähle pro Auswahlfrage eine Antwort.</p>
-    <form action={submit.bind(null, token)}>
+    {(await searchParams).fehler && <p role="alert">Bitte beantworte jede Frage.</p>}
+    <SurveySteps submitAction={submit.bind(null, token)}>
       {categories.map(category => <div key={category.title}>
         <h2>{category.title}</h2>
         {category.questions.map(question => <fieldset key={question.id}>
@@ -26,8 +28,6 @@ export default async function Survey({params,searchParams}:PageProps<'/umfrage/[
           </div>}
         </fieldset>)}
       </div>)}
-      {(await searchParams).fehler && <p role="alert">Bitte beantworte jede Frage. Jeder Freitext benötigt eine Antwort mit maximal 250 Zeichen.</p>}
-      <button>Antworten absenden</button>
-    </form>
+    </SurveySteps>
   </section>;
 }

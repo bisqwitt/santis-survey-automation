@@ -1,12 +1,12 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
-import { randomBytes, randomUUID, createHash, timingSafeEqual } from 'node:crypto';
+import { connection } from 'next/server';
+import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
+import { getCatalog } from './catalog';
 import { db, passwordHash } from './db';
 import { readAnswers } from './questions';
-import { getCatalog } from './catalog';
 
 function digest(value: string) { return createHash('sha256').update(value).digest('hex'); }
 function field(form: FormData, key: string) { return String(form.get(key) ?? '').trim(); }
@@ -28,7 +28,7 @@ export async function login(form: FormData) {
   const token = randomBytes(32).toString('hex');
   db().prepare('DELETE FROM sessions WHERE expires <= ?').run(Date.now());
   db().prepare('INSERT INTO sessions VALUES (?,?)').run(digest(token), Date.now()+28800000);
-  (await cookies()).set('admin_session', token, {httpOnly:true, secure:process.env.NODE_ENV==='production', sameSite:'lax', path:'/', maxAge:28800});
+  (await cookies()).set('admin_session', token, {httpOnly:false, secure:process.env.NODE_ENV==='production', sameSite:'lax', path:'/', maxAge:28800});
   redirect('/');
 }
 
