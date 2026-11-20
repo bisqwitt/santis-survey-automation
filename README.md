@@ -1,34 +1,18 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SANTIS Projektwochen
 
-## Getting Started
+Node.js ab 22.13. Im Projektordner `npm ci` ausführen. Für eine neue Installation in `.env.local` die Variable `ADMIN_INITIAL_PASSWORD` auf das vereinbarte Startpasswort setzen. `npm run dev` startet die Anwendung unter http://localhost:3000.
 
-First, run the development server:
+Das Administratorkonto sascha-max.steinegger@santismail.ch wird beim ersten Datenbankzugriff eingerichtet. Ein Passwortwechsel erfolgt in der Verwaltung und beendet bestehende Sitzungen. Nach der Ersteinrichtung kann die Startpasswort-Variable entfernt werden.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Jede Einladung erhält einen persönlichen UUID-Link und die zu diesem Zeitpunkt aktive Katalogversion. Änderungen am Katalog werden als neue Version gespeichert. Das Ausblenden einer Frage betrifft zukünftige Einladungen. Eine Umfrage kann einmal abgegeben werden. Frühere Teilnehmerlinks bleiben gültig.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Die Verwaltung zeigt einzelne Umfragen und Antworten sowie nach Kategorie und Auswahlfrage gruppierte Diagramme. Unveränderte Fragen werden über alle Fragebögen hinweg zusammen ausgewertet. Das bestätigte Löschen eines Teilnehmers entfernt auch seine Einladung und seine Antworten.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Für den Firmenbetrieb die Anwendung unter einer erreichbaren HTTPS-Adresse öffnen und dort Links kopieren. Mit `npm run build` und `npm start` betreiben. Das Verzeichnis `data/` auf dauerhaftem, beschreibbarem Speicher halten und sichern.
+## Einladungen per E-Mail
 
-## Learn More
+In der Teilnehmerverwaltung öffnet «Einladungen versenden» die Empfängerauswahl für offene Umfragen. Jede ausgewählte Person erhält eine separate Nachricht mit ihrem persönlichen Link.
 
-To learn more about Next.js, take a look at the following resources:
+Die SMTP-Einstellungen aus `.env.example` in `.env.local` oder als Server-Umgebungsvariablen setzen. `SMTP_FROM` ist die reine Absenderadresse. `SURVEY_BASE_URL` ist die für die Teilnehmenden erreichbare Basisadresse. Port 465 verwendet direkt TLS, andere Ports verwenden STARTTLS. Nach Änderungen den Server neu starten.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Der Versand benötigt Python 3 auf dem Server und das mitgelieferte Skript `scripts/send_invitations.py`. Optional kann `SMTP_PYTHON` auf den absoluten Pfad des Interpreters zeigen. Ohne Konfiguration lässt sich die Auswahl öffnen, der Versand bleibt deaktiviert.
