@@ -28,7 +28,7 @@ export async function login(form: FormData) {
   const token = randomBytes(32).toString('hex');
   db().prepare('DELETE FROM sessions WHERE expires <= ?').run(Date.now());
   db().prepare('INSERT INTO sessions VALUES (?,?)').run(digest(token), Date.now()+28800000);
-  (await cookies()).set('admin_session', token, {httpOnly:false, secure:process.env.NODE_ENV==='production', sameSite:'lax', path:'/', maxAge:28800});
+  (await cookies()).set('admin_session', token, {httpOnly:true, secure:false, sameSite:'lax', path:'/', maxAge:28800});
   redirect('/');
 }
 
@@ -123,10 +123,9 @@ export async function editCatalog(version:number, action:string, target:string, 
 export async function submit(token: string, form: FormData) {
   const person=db().prepare('SELECT catalog, answers FROM participants WHERE token=?').get(token);
   if (!person) notFound();
-  const path='/umfrage/'+token;
-  if (person.answers) redirect(path);
+  if (person.answers) return true;
   const answers = readAnswers(form,getCatalog(Number(person.catalog)));
-  if (!answers) redirect(path+'?fehler=1');
+  if (!answers) return false;
   db().prepare('UPDATE participants SET answers=? WHERE token=? AND answers IS NULL').run(JSON.stringify(answers),token);
-  redirect(path);
+  return true;
 }

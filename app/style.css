@@ -149,3 +149,13 @@ header img{width:clamp(105px,16vw,168px);height:auto}input{accent-color:#133f66}
 }
 .survey-text{position:relative}.survey-text textarea{display:block;padding-bottom:1.8rem}.survey-text small{position:absolute;right:1rem;bottom:.4rem;color:#49627b;font-size:.75rem;pointer-events:none}
 @media(min-width:781px){header .admin-tools{margin-inline-start:16px}}
+.scale{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));align-items:stretch}
+.scale label{min-width:0;overflow-wrap:anywhere}
+@media(max-width:800px){.scale{grid-template-columns:1fr}}
+.manual-copy-dialog{width:min(30rem,calc(100% - 2rem));padding:24px;border:1px solid #ccdbe7;border-radius:14px;color:#142f48;box-shadow:0 14px 44px #06274429}
+.manual-copy-dialog::backdrop{background:#06274459}
+.manual-copy-dialog h2{font-size:1.25rem;margin:0}
+.manual-copy-dialog p{color:#42627c;font-size:.9375rem;margin:8px 0 18px}
+.manual-copy-dialog input[readonly]{background:#f4f7fb;color:#163e60;font-size:.9375rem}
+.manual-copy-dialog>div{display:flex;justify-content:flex-end;margin-top:18px}
+.manual-copy-dialog button{background:#062744;color:white;padding:7px 14px;font-weight:600}
